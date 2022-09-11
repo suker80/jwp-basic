@@ -14,6 +14,10 @@ public class DataBase {
         users.put(user.getUserId(), user);
     }
 
+    public static void updateUser(String userId, User user) {
+        users.replace(userId, user);
+    }
+
     public static User findUserById(String userId) {
         return users.get(userId);
     }
