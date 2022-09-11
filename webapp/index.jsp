@@ -43,7 +43,7 @@
                         <li><a href="https://facebook.com" target="_blank">Facebook</a></li>
                     </ul>
                 </li>
-                <li><a href="./user/list.jsp"><i class="glyphicon glyphicon-user"></i></a></li>
+                <li><a href="./user/list"><i class="glyphicon glyphicon-user"></i></a></li>
             </ul>
         </div>
     </div>
@@ -78,7 +78,7 @@
         </div>
     </div>
 </div>
-
+1
 <div class="container" id="main">
     <div class="col-md-12 col-sm-12 col-lg-10 col-lg-offset-1">
         <div class="panel panel-default qna-list">
