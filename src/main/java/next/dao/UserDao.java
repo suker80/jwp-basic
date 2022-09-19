@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import core.jdbc.ConnectionManager;
 import next.model.User;
@@ -66,7 +67,7 @@ public class UserDao {
         }
     }
 
-    public Collection<User> findAll() {
+    public List<User> findAll() {
 
         String sql = "SELECT userId, password, name, email FROM USERS";
         try (Connection connection = ConnectionManager.getConnection();
@@ -89,15 +90,15 @@ public class UserDao {
             throw new RuntimeException(e);
         }
     }
-    public boolean updateUser(String userId, String name , String email , String password) {
+    public void updateUser(User user) {
+
         String sql = "update USERS U SET NAME =? , EMAIL =? , PASSWORD = ? where USERID =?";
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)
         ) {
-            preparedStatement.setString(1, name);
-            preparedStatement.setString(2, email);
-            preparedStatement.setString(3, userId);
-            return preparedStatement.executeUpdate() > 0;
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(3, user.getUserId());
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
