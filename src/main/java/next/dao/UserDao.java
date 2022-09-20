@@ -14,7 +14,7 @@ public class UserDao {
     public void insert(User user) throws SQLException {
         JdbcTemplate jdbcTemplate = new JdbcTemplate() {
             @Override
-            public void setValues(User user, PreparedStatement preparedStatement) throws SQLException {
+            public void setValues(PreparedStatement preparedStatement) throws SQLException {
                 preparedStatement.setString(1, user.getUserId());
                 preparedStatement.setString(2, user.getPassword());
                 preparedStatement.setString(3, user.getEmail());
@@ -27,7 +27,7 @@ public class UserDao {
                 return "insert into USERS values ( ?,?,?,? )";
             }
         };
-        jdbcTemplate.update(user);
+        jdbcTemplate.update();
 
     }
 
@@ -95,7 +95,7 @@ public class UserDao {
             }
 
             @Override
-            public void setValues(User user, PreparedStatement preparedStatement) {
+            public void setValues(PreparedStatement preparedStatement) {
 
 
                 try {
@@ -109,6 +109,6 @@ public class UserDao {
 
             }
         };
-        jdbcTemplate.update(user);
+        jdbcTemplate.update();
     }
 }
