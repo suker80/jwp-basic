@@ -52,7 +52,7 @@ public class UserDao {
         String sql = "SELECT userId, password, name, email FROM USERS";
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery(sql)
+             ResultSet resultSet = preparedStatement.executeQuery()
         ) {
 
             ArrayList<User> usersList = new ArrayList<>();
@@ -67,8 +67,9 @@ public class UserDao {
 
             return usersList;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
+        return null;
     }
 
     public void update(User user) {
@@ -103,7 +104,8 @@ public class UserDao {
         try {
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getEmail());
-            preparedStatement.setString(3, user.getUserId());
+            preparedStatement.setString(3,user.getPassword());
+            preparedStatement.setString(4, user.getUserId());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
