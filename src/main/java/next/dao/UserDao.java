@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import core.jdbc.ConnectionManager;
@@ -16,13 +15,8 @@ public class UserDao {
         Connection con = null;
         PreparedStatement pstmt = null;
         try {
-            con = ConnectionManager.getConnection();
-            String sql = "INSERT INTO USERS VALUES (?, ?, ?, ?)";
-            pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, user.getUserId());
-            pstmt.setString(2, user.getPassword());
-            pstmt.setString(3, user.getName());
-            pstmt.setString(4, user.getEmail());
+            pstmt = createQueryForInsert();
+            setValuesForInsert(user, pstmt);
 
             pstmt.executeUpdate();
         } finally {
@@ -90,18 +84,59 @@ public class UserDao {
             throw new RuntimeException(e);
         }
     }
-    public void updateUser(User user) {
+
+    public void update(User user) {
 
         String sql = "update USERS U SET NAME =? , EMAIL =? , PASSWORD = ? where USERID =?";
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)
-        ) {
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getEmail());
-            preparedStatement.setString(3, user.getUserId());
+        PreparedStatement preparedStatement = createQueryForUpdate();
+        setValuesForUpdate(user, preparedStatement);
 
+    }
+
+    public PreparedStatement createQueryForInsert() {
+        String sql = "insert into USERS values ( ?,?,?,? )";
+        Connection connection = ConnectionManager.getConnection();
+        try {
+            return  connection.prepareStatement(sql);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+    }
+
+    public PreparedStatement createQueryForUpdate() {
+        String sql = "update USERS U SET NAME =? , EMAIL =? , PASSWORD = ? where USERID =?";
+        Connection connection = ConnectionManager.getConnection();
+        try {
+            return connection.prepareStatement(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public PreparedStatement setValuesForInsert(User user, PreparedStatement pstmt) {
+        try {
+            pstmt.setString(1, user.getUserId());
+            pstmt.setString(2, user.getPassword());
+            pstmt.setString(3, user.getName());
+            pstmt.setString(4, user.getEmail());
+            return pstmt;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+    public PreparedStatement setValuesForUpdate(User user, PreparedStatement preparedStatement) {
+        try {
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(3, user.getUserId());
+            return preparedStatement;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
