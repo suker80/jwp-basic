@@ -1,5 +1,8 @@
 package next.dao;
 
+import core.jdbc.ConnectionManager;
+import next.model.User;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,20 +10,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import core.jdbc.ConnectionManager;
-import next.model.User;
-
 public class UserDao {
     public void insert(User user) throws SQLException {
-        String sql = createQueryForInsert();
-        try (Connection con = ConnectionManager.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
-            setValuesForInsert(user, pstmt);
-            pstmt.executeUpdate();
-        } catch (
-                SQLException e
-        ) {
-            e.printStackTrace();
-        }
+        InsertJdbcTemplate jdbcTemplate = new InsertJdbcTemplate();
+        jdbcTemplate.insert(this, user);
     }
 
     public User findByUserId(String userId) throws SQLException {
@@ -79,15 +72,10 @@ public class UserDao {
     }
 
     public void update(User user) {
-        String sql = createQueryForUpdate();
-        try (Connection con = ConnectionManager.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
-            setValuesForUpdate(user, pstmt);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
+        UpdateJdbcTemplate jdbcTemplate = new UpdateJdbcTemplate();
+        jdbcTemplate.update(this, user);
     }
+
 
     public String createQueryForInsert() {
         return "insert into USERS values ( ?,?,?,? )";
