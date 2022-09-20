@@ -15,9 +15,10 @@ public class UserDao {
         Connection con = null;
         PreparedStatement pstmt = null;
         try {
-            pstmt = createQueryForInsert();
+            String sql = createQueryForInsert();
+            con = ConnectionManager.getConnection();
+            pstmt = con.prepareStatement(sql);
             setValuesForInsert(user, pstmt);
-
             pstmt.executeUpdate();
         } finally {
             if (pstmt != null) {
@@ -86,41 +87,35 @@ public class UserDao {
     }
 
     public void update(User user) {
-
-        String sql = "update USERS U SET NAME =? , EMAIL =? , PASSWORD = ? where USERID =?";
-        PreparedStatement preparedStatement = createQueryForUpdate();
-        setValuesForUpdate(user, preparedStatement);
-
-    }
-
-    public PreparedStatement createQueryForInsert() {
-        String sql = "insert into USERS values ( ?,?,?,? )";
-        Connection connection = ConnectionManager.getConnection();
+        Connection con;
+        PreparedStatement pstmt;
+        String sql = createQueryForUpdate();
         try {
-            return  connection.prepareStatement(sql);
+            con = ConnectionManager.getConnection();
+            pstmt = con.prepareStatement(sql);
+            setValuesForUpdate(user, pstmt);
+            pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    public PreparedStatement createQueryForUpdate() {
-        String sql = "update USERS U SET NAME =? , EMAIL =? , PASSWORD = ? where USERID =?";
-        Connection connection = ConnectionManager.getConnection();
-        try {
-            return connection.prepareStatement(sql);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public String createQueryForInsert() {
+        return "insert into USERS values ( ?,?,?,? )";
     }
 
-    public PreparedStatement setValuesForInsert(User user, PreparedStatement pstmt) {
+    public String createQueryForUpdate() {
+        return "update USERS U SET NAME =? , EMAIL =? , PASSWORD = ? where USERID =?";
+
+    }
+
+    public void setValuesForInsert(User user, PreparedStatement pstmt) {
         try {
             pstmt.setString(1, user.getUserId());
             pstmt.setString(2, user.getPassword());
             pstmt.setString(3, user.getName());
             pstmt.setString(4, user.getEmail());
-            return pstmt;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -128,12 +123,11 @@ public class UserDao {
 
     }
 
-    public PreparedStatement setValuesForUpdate(User user, PreparedStatement preparedStatement) {
+    public void setValuesForUpdate(User user, PreparedStatement preparedStatement) {
         try {
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getUserId());
-            return preparedStatement;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
