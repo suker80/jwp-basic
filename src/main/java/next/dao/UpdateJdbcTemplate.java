@@ -7,13 +7,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class UpdateJdbcTemplate {
+public abstract class UpdateJdbcTemplate {
 
-    public  void update(UserDao userDao, User user) {
-        String sql = userDao.createQueryForUpdate();
-        try (Connection connection = ConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql))
-        {
-            userDao.setValuesForUpdate(user, preparedStatement);
+
+    public void update(User user) {
+        String sql = createQueryForInsert();
+        try (Connection connection = ConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            setValuesForUpdate(user, preparedStatement);
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -21,5 +21,9 @@ public class UpdateJdbcTemplate {
         }
 
     }
+
+    public abstract String createQueryForInsert();
+
+    public abstract void setValuesForUpdate(User user, PreparedStatement preparedStatement);
 }
 

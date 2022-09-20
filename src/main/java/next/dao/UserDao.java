@@ -12,8 +12,22 @@ import java.util.List;
 
 public class UserDao {
     public void insert(User user) throws SQLException {
-        InsertJdbcTemplate jdbcTemplate = new InsertJdbcTemplate();
-        jdbcTemplate.insert(this, user);
+        InsertJdbcTemplate jdbcTemplate = new InsertJdbcTemplate() {
+            @Override
+            public void setValuesForInsert(User user, PreparedStatement preparedStatement) throws SQLException {
+                preparedStatement.setString(1, user.getUserId());
+                preparedStatement.setString(2, user.getPassword());
+                preparedStatement.setString(3, user.getEmail());
+                preparedStatement.setString(4, user.getName());
+
+            }
+
+            @Override
+            public String createQueryForInsert() {
+                return "insert into USERS values ( ?,?,?,? )";
+            }
+        };
+        jdbcTemplate.insert(user);
     }
 
     public User findByUserId(String userId) throws SQLException {
@@ -73,42 +87,27 @@ public class UserDao {
     }
 
     public void update(User user) {
-        UpdateJdbcTemplate jdbcTemplate = new UpdateJdbcTemplate();
-        jdbcTemplate.update(this, user);
-    }
+        UpdateJdbcTemplate jdbcTemplate = new UpdateJdbcTemplate() {
+            @Override
+            public String createQueryForInsert() {
+                return "update USERS U SET NAME =? , EMAIL =? , PASSWORD = ? where USERID =?";
+            }
+
+            @Override
+            public void setValuesForUpdate(User user, PreparedStatement preparedStatement) {
 
 
-    public String createQueryForInsert() {
-        return "insert into USERS values ( ?,?,?,? )";
-    }
+                try {
+                    preparedStatement.setString(1, user.getName());
+                    preparedStatement.setString(2, user.getEmail());
+                    preparedStatement.setString(3, user.getPassword());
+                    preparedStatement.setString(4, user.getUserId());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
 
-    public String createQueryForUpdate() {
-        return "update USERS U SET NAME =? , EMAIL =? , PASSWORD = ? where USERID =?";
-
-    }
-
-    public void setValuesForInsert(User user, PreparedStatement pstmt) {
-        try {
-            pstmt.setString(1, user.getUserId());
-            pstmt.setString(2, user.getPassword());
-            pstmt.setString(3, user.getName());
-            pstmt.setString(4, user.getEmail());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-
-    }
-
-    public void setValuesForUpdate(User user, PreparedStatement preparedStatement) {
-        try {
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getEmail());
-            preparedStatement.setString(3,user.getPassword());
-            preparedStatement.setString(4, user.getUserId());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
+            }
+        };
+        jdbcTemplate.update(user);
     }
 }
