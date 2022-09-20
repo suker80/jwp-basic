@@ -12,22 +12,14 @@ import next.model.User;
 
 public class UserDao {
     public void insert(User user) throws SQLException {
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        try {
-            String sql = createQueryForInsert();
-            con = ConnectionManager.getConnection();
-            pstmt = con.prepareStatement(sql);
+        String sql = createQueryForInsert();
+        try (Connection con = ConnectionManager.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
             setValuesForInsert(user, pstmt);
             pstmt.executeUpdate();
-        } finally {
-            if (pstmt != null) {
-                pstmt.close();
-            }
-
-            if (con != null) {
-                con.close();
-            }
+        } catch (
+                SQLException e
+        ) {
+            e.printStackTrace();
         }
     }
 
@@ -36,8 +28,8 @@ public class UserDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            con = ConnectionManager.getConnection();
             String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
+            con = ConnectionManager.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, userId);
 
@@ -87,12 +79,8 @@ public class UserDao {
     }
 
     public void update(User user) {
-        Connection con;
-        PreparedStatement pstmt;
         String sql = createQueryForUpdate();
-        try {
-            con = ConnectionManager.getConnection();
-            pstmt = con.prepareStatement(sql);
+        try (Connection con = ConnectionManager.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
             setValuesForUpdate(user, pstmt);
             pstmt.executeUpdate();
         } catch (SQLException e) {
