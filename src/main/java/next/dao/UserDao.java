@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class UserDao {
     public void insert(User user) throws SQLException {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate() {
+        SelectJdbcTemplate SelectJdbcTemplate = new SelectJdbcTemplate() {
             @Override
             public void setValues(PreparedStatement preparedStatement) throws SQLException {
                 preparedStatement.setString(1, user.getUserId());
@@ -21,17 +21,23 @@ public class UserDao {
             }
 
             @Override
+            protected Object mapRow(ResultSet resultSet) {
+                return null;
+            }
+
+            @Override
             public String createQuery() {
+                // language=SQL
                 return "insert into USERS values ( ?,?,?,? )";
             }
         };
-        jdbcTemplate.update();
+        SelectJdbcTemplate.update();
 
     }
 
     public User findByUserId(String userId) {
 
-        SelectJdbcTemplate jdbcTemplate = new SelectJdbcTemplate() {
+        SelectJdbcTemplate SelectJdbcTemplate = new SelectJdbcTemplate() {
             @Override
             protected Object mapRow(ResultSet resultSet) throws SQLException {
                 String userId = resultSet.getString("userId");
@@ -52,11 +58,11 @@ public class UserDao {
 
             }
         };
-        return (User) jdbcTemplate.query().get(0);
+        return (User) SelectJdbcTemplate.query().get(0);
     }
 
     public List<User> findAll() {
-        SelectJdbcTemplate jdbcTemplate = new SelectJdbcTemplate() {
+        SelectJdbcTemplate SelectJdbcTemplate = new SelectJdbcTemplate() {
             @Override
             protected Object mapRow(ResultSet resultSet) throws SQLException {
                 String userId = resultSet.getString("userId");
@@ -75,12 +81,17 @@ public class UserDao {
             public void setValues(PreparedStatement preparedStatement) {
             }
         };
-        List<Object> query = jdbcTemplate.query();
+        List<Object> query = SelectJdbcTemplate.query();
         return query.stream().map(o -> (User) o).collect(Collectors.toList());
     }
 
     public void update(User user) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate() {
+        SelectJdbcTemplate SelectJdbcTemplate = new SelectJdbcTemplate() {
+            @Override
+            protected Object mapRow(ResultSet resultSet) {
+                return null;
+            }
+
             @Override
             public String createQuery() {
                 return "update USERS U SET NAME =? , EMAIL =? , PASSWORD = ? where USERID =?";
@@ -101,6 +112,6 @@ public class UserDao {
 
             }
         };
-        jdbcTemplate.update();
+        SelectJdbcTemplate.update();
     }
 }

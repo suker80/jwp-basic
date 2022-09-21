@@ -39,11 +39,20 @@ public abstract class SelectJdbcTemplate {
 
 
     }
-
+    public void update() {
+        String sql = createQuery();
+        try (Connection connection = ConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            setValues(preparedStatement);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     protected abstract Object mapRow(ResultSet resultSet) throws SQLException;
 
     public abstract String createQuery();
 
     public abstract void setValues(PreparedStatement preparedStatement) throws SQLException;
+
 }
