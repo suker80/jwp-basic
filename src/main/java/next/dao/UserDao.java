@@ -2,8 +2,8 @@ package next.dao;
 
 import next.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserDao {
     public void insert(User user) {
@@ -35,7 +35,7 @@ public class UserDao {
 
         };
         PreparedStatementSetter preparedStatementSetter = preparedStatement -> preparedStatement.setString(1, userId);
-        RowMapper rowMapper = resultSet -> {
+        RowMapper<User> rowMapper = resultSet -> {
             String id = resultSet.getString("userId");
             String password = resultSet.getString("password");
             String email = resultSet.getString("email");
@@ -43,7 +43,7 @@ public class UserDao {
             return new User(id, password, name, email);
         };
 
-        return (User) jdbcTemplate.query(preparedStatementSetter, rowMapper).get(0);
+        return jdbcTemplate.query(preparedStatementSetter, rowMapper).get(0);
     }
 
     public List<User> findAll() {
@@ -55,7 +55,7 @@ public class UserDao {
             }
 
         };
-        RowMapper rowMapper = resultSet -> {
+        RowMapper<User> rowMapper = resultSet -> {
             String userId = resultSet.getString("userId");
             String password = resultSet.getString("password");
             String email = resultSet.getString("email");
@@ -66,8 +66,8 @@ public class UserDao {
 
         };
 
-        List<Object> query = jdbcTemplate.query(preparedStatementSetter, rowMapper);
-        return query.stream().map(o -> (User) o).collect(Collectors.toList());
+        List<User> query = jdbcTemplate.query(preparedStatementSetter, rowMapper);
+        return new ArrayList<>(query);
     }
 
     public void update(User user) {

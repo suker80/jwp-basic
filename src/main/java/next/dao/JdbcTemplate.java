@@ -12,7 +12,7 @@ import java.util.List;
 
 public abstract class JdbcTemplate {
 
-    public List<Object> query(PreparedStatementSetter preParedStatementSetter, RowMapper rowMapper) {
+    public <T> List<T> query(PreparedStatementSetter preParedStatementSetter, RowMapper<T> rowMapper) {
 
         ResultSet resultSet = null;
         String sql = createQuery();
@@ -21,10 +21,10 @@ public abstract class JdbcTemplate {
         ) {
 
             preParedStatementSetter.setValues(preparedStatement);
-            List<Object> list = new ArrayList<>();
+            List<T> list = new ArrayList<>();
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Object object = rowMapper.mapRow(resultSet);
+                T object = rowMapper.mapRow(resultSet);
                 list.add(object);
             }
             return list;
