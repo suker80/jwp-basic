@@ -1,6 +1,7 @@
 package next.dao;
 
 import core.jdbc.ConnectionManager;
+import next.DataAccessException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SelectJdbcTemplate {
+public abstract class JdbcTemplate {
 
     public List<Object> query(PreparedStatementSetter preParedStatementSetter, RowMapper rowMapper) {
 
@@ -34,7 +35,7 @@ public abstract class SelectJdbcTemplate {
                 try {
                     resultSet.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    throw new DataAccessException();
                 }
             }
         }
@@ -46,8 +47,8 @@ public abstract class SelectJdbcTemplate {
         try (Connection connection = ConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preParedStatementSetter.setValues(preparedStatement);
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new DataAccessException(e);
         }
     }
 
