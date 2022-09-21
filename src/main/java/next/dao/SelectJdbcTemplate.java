@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SelectJdbcTemplate {
+    private PreparedStatementSetter preParedStatementSetter;
+    private RowMapper rowMapper;
     public List<Object> query() {
         ResultSet resultSet = null;
         String sql = createQuery();
@@ -17,11 +19,11 @@ public abstract class SelectJdbcTemplate {
              PreparedStatement preparedStatement = connection.prepareStatement(sql)
         ) {
 
-            setValues(preparedStatement);
+            preParedStatementSetter.setValues(preparedStatement);
             List<Object> list = new ArrayList<>();
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Object object = mapRow(resultSet);
+                Object object = rowMapper.mapRow(resultSet);
                 list.add(object);
             }
             return list;
@@ -42,17 +44,23 @@ public abstract class SelectJdbcTemplate {
     public void update() {
         String sql = createQuery();
         try (Connection connection = ConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            setValues(preparedStatement);
+            preParedStatementSetter.setValues(preparedStatement);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    protected abstract Object mapRow(ResultSet resultSet) throws SQLException;
 
     public abstract String createQuery();
 
-    public abstract void setValues(PreparedStatement preparedStatement) throws SQLException;
+
+    public void setPreParedStatementSetter(PreparedStatementSetter preParedStatementSetter) {
+        this.preParedStatementSetter = preParedStatementSetter;
+    }
+
+    public void setRowMapper(RowMapper rowMapper) {
+        this.rowMapper = rowMapper;
+    }
 
 }
