@@ -16,14 +16,13 @@ public class UserDao {
                 return "insert into USERS values ( ?,?,?,? )";
             }
         };
-
-        selectJdbcTemplate.setPreParedStatementSetter(preparedStatement -> {
+        PreparedStatementSetter preparedStatementSetter = preparedStatement -> {
             preparedStatement.setString(1, user.getUserId());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setString(4, user.getName());
-        });
-        selectJdbcTemplate.update();
+        };
+        selectJdbcTemplate.update(preparedStatementSetter);
 
     }
 
@@ -34,16 +33,18 @@ public class UserDao {
             public String createQuery() {
                 return "select * from users where userId= ?";
             }
+
         };
-        selectJdbcTemplate.setPreParedStatementSetter(preparedStatement -> preparedStatement.setString(1, userId));
-        selectJdbcTemplate.setRowMapper(resultSet -> {
+        PreparedStatementSetter preparedStatementSetter = preparedStatement -> preparedStatement.setString(1, userId);
+        RowMapper rowMapper = resultSet -> {
             String id = resultSet.getString("userId");
             String password = resultSet.getString("password");
             String email = resultSet.getString("email");
             String name = resultSet.getString("name");
             return new User(id, password, name, email);
-        });
-        return (User) selectJdbcTemplate.query().get(0);
+        };
+
+        return (User) selectJdbcTemplate.query(preparedStatementSetter, rowMapper).get(0);
     }
 
     public List<User> findAll() {
@@ -55,15 +56,18 @@ public class UserDao {
             }
 
         };
-        selectJdbcTemplate.setRowMapper(resultSet -> {
+        RowMapper rowMapper = resultSet -> {
             String userId = resultSet.getString("userId");
             String password = resultSet.getString("password");
             String email = resultSet.getString("email");
             String name = resultSet.getString("name");
             return new User(userId, password, name, email);
-        });
-        selectJdbcTemplate.setPreParedStatementSetter(preparedStatement -> {});
-        List<Object> query = selectJdbcTemplate.query();
+        };
+        PreparedStatementSetter preparedStatementSetter = preparedStatement -> {
+
+        };
+
+        List<Object> query = selectJdbcTemplate.query(preparedStatementSetter, rowMapper);
         return query.stream().map(o -> (User) o).collect(Collectors.toList());
     }
 
@@ -75,12 +79,13 @@ public class UserDao {
                 return "update USERS U SET NAME =? , EMAIL =? , PASSWORD = ? where USERID =?";
             }
         };
-        selectJdbcTemplate.setPreParedStatementSetter(preparedStatement -> {
+        PreparedStatementSetter preparedStatementSetter = preparedStatement -> {
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPassword());
             preparedStatement.setString(4, user.getUserId());
-        });
-        selectJdbcTemplate.update();
+        };
+        selectJdbcTemplate.update(preparedStatementSetter);
+
     }
 }

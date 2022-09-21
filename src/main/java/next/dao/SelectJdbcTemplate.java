@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SelectJdbcTemplate {
-    private PreparedStatementSetter preParedStatementSetter;
-    private RowMapper rowMapper;
-    public List<Object> query() {
+
+    public List<Object> query(PreparedStatementSetter preParedStatementSetter, RowMapper rowMapper) {
+
         ResultSet resultSet = null;
         String sql = createQuery();
         try (Connection connection = ConnectionManager.getConnection();
@@ -41,7 +41,7 @@ public abstract class SelectJdbcTemplate {
 
 
     }
-    public void update() {
+    public void update(PreparedStatementSetter preParedStatementSetter) {
         String sql = createQuery();
         try (Connection connection = ConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preParedStatementSetter.setValues(preparedStatement);
@@ -55,12 +55,6 @@ public abstract class SelectJdbcTemplate {
     public abstract String createQuery();
 
 
-    public void setPreParedStatementSetter(PreparedStatementSetter preParedStatementSetter) {
-        this.preParedStatementSetter = preParedStatementSetter;
-    }
 
-    public void setRowMapper(RowMapper rowMapper) {
-        this.rowMapper = rowMapper;
-    }
 
 }
