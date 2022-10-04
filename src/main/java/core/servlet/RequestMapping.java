@@ -6,26 +6,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RequestMapping {
-    private Map<String, Controller> controllerMap = new HashMap<>();
+    private final Map<String, Controller> controllerMap = new HashMap<>();
 
     public RequestMapping() {
-        controllerMap.put("/user/login", new LoginController());
-        controllerMap.put("/user/create", new CreateUserController());
+        controllerMap.put("/users/login", new LoginController());
+        controllerMap.put("/users/create", new CreateUserController());
         controllerMap.put("forward", new ForwardController());
-        controllerMap.put("/user/list", new ListUserController());
+        controllerMap.put("/users/list", new ListUserController());
         controllerMap.put("/user/logout", new LogoutController());
+        controllerMap.put("/qna", new CreateQuestionsController());
+        controllerMap.put("/", new HomeController());
+        controllerMap.put("/index.jsp", new HomeController());
+        controllerMap.put("/qna/form", new ForwardController());
     }
 
     public Controller getController(String requestURI) {
-        Controller controller = controllerMap.get(requestURI);
-        if (controller == null) {
-            Controller forward = controllerMap.get("forward");
-            return forward;
-        } else {
-            return controller;
-        }
+        return controllerMap.get(requestURI);
     }
-
 
 
 }

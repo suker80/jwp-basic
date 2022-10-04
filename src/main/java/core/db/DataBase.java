@@ -1,14 +1,13 @@
 package core.db;
 
+import com.google.common.collect.Maps;
+import next.model.User;
+
 import java.util.Collection;
 import java.util.Map;
 
-import com.google.common.collect.Maps;
-
-import next.model.User;
-
 public class DataBase {
-    private static Map<String, User> users = Maps.newHashMap();
+    private static final Map<String, User> users = Maps.newHashMap();
 
     public static void addUser(User user) {
         users.put(user.getUserId(), user);

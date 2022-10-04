@@ -2,7 +2,6 @@ package core.controller;
 
 import core.db.DataBase;
 import next.model.User;
-import next.model.UserSessionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,9 +16,9 @@ public class LoginController implements Controller {
         User user = DataBase.findUserById(userId);
         if (user != null && user.getPassword().equals(password)) {
             request.getSession().setAttribute("user", user);
-            return "redirect:/index.jsp";
+            return "redirect:/home";
         } else {
-            return "/login_failed.jsp";
+            return "user/login_failed.jsp";
         }
     }
 }

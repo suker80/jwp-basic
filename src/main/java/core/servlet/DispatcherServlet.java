@@ -16,7 +16,6 @@ import java.io.IOException;
 public class DispatcherServlet extends HttpServlet {
     private final Logger log = LoggerFactory.getLogger(DispatcherServlet.class);
     private RequestMapping requestMapping;
-    private final String redirectPrefix = "redirect:";
 
     @Override
     public void init() {
@@ -30,13 +29,16 @@ public class DispatcherServlet extends HttpServlet {
             String viewName = controller.execute(req, resp);
             log.info("viewName = {} ", viewName);
             forward(viewName, req, resp);
-        } catch (Exception e) {
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
     }
 
     private void forward(String viewName, HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        String redirectPrefix = "redirect:";
         if (viewName.startsWith(redirectPrefix)) {
             String substring = viewName.substring(redirectPrefix.length());
             log.info("redirect : {}", substring);

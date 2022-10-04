@@ -26,6 +26,6 @@ public class CreateUserController implements Controller {
         }
 
         DataBase.addUser(user);
-        return "redirect:/index.jsp";
+        return "redirect:/home";
     }
 }

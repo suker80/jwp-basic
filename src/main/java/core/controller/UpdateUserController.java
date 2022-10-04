@@ -13,6 +13,6 @@ public class UpdateUserController implements Controller {
         User user = new User(request.getParameter("userId"), request.getParameter("password"), request.getParameter("name"),
                 request.getParameter("email"));
         DataBase.updateUser(user.getUserId(), user);
-        return "redirect:/index.jsp";
+        return "redirect:/home";
     }
 }
