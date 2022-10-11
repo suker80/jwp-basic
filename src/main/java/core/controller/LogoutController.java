@@ -1,19 +1,18 @@
 package core.controller;
 
-import core.view.JspView;
-import core.view.View;
+import core.view.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class LogoutController implements Controller {
+public class LogoutController extends AbstractController {
     @Override
-    public View execute(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         if (session != null) {
             session.invalidate();
         }
-        return new JspView("redirect:/home");
+        return  jspView("redirect:/home");
     }
 }

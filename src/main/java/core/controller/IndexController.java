@@ -1,14 +1,13 @@
 package core.controller;
 
-import core.view.JspView;
-import core.view.View;
+import core.view.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class IndexController implements Controller {
+public class IndexController extends AbstractController {
     @Override
-    public View execute(HttpServletRequest request, HttpServletResponse response) {
-        return new JspView("redirect:/home");
+    public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) {
+        return  jspView("redirect:/home");
     }
 }

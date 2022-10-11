@@ -4,30 +4,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
 public class JsonView implements View {
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final HashMap<String, Object> model = new HashMap<>();
 
 
     @Override
-    public void render(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType("application/json;charset=UTF-8");
-        String s = objectMapper.writeValueAsString(createModel(request));
-        response.getWriter().write(s);
-
+        String s = objectMapper.writeValueAsString(model);
+        response.getWriter().print(s);
     }
 
-    private Map<String, Object> createModel(HttpServletRequest request) {
-        Enumeration<String> names = request.getAttributeNames();
-        Map<String, Object> model = new HashMap<>();
-        while (names.hasMoreElements()) {
-            String name = names.nextElement();
-            model.put(name, request.getAttribute(name));
-        }
-        return model;
-    }
 
 }
