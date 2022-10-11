@@ -1,12 +1,16 @@
 package core.controller;
 
+import core.view.JspView;
+import core.view.View;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ForwardController implements Controller{
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
-        return request.getRequestURI();
+    public View execute(HttpServletRequest request, HttpServletResponse response) {
+        return new JspView(request.getRequestURI());
     }
+
 }

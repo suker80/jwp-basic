@@ -1,5 +1,7 @@
 package core.controller;
 
+import core.view.JspView;
+import core.view.View;
 import next.dao.AnswerDao;
 import next.dao.QuestionDao;
 import next.model.Answer;
@@ -11,12 +13,12 @@ import java.util.List;
 
 public class QnaShowController implements Controller {
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
+    public View execute(HttpServletRequest request, HttpServletResponse response) {
         String questionId = request.getParameter("questionId");
         Question question = new QuestionDao().findQuestion(questionId);
         List<Answer> answerList = new AnswerDao().findAllByQuestionId(questionId);
         request.setAttribute("question", question);
         request.setAttribute("answers", answerList);
-        return "/qna/show.jsp";
+        return new JspView("/qna/show.jsp");
     }
 }
