@@ -20,7 +20,7 @@ public class QuestionDao {
             preparedStatement.setString(2, question.getTitle());
             preparedStatement.setString(3, question.getContents());
             preparedStatement.setTime(4, question.getCreatedDate());
-            preparedStatement.setInt(5, question.getCountOfAnswer());
+            preparedStatement.setInt(5, question.getCountOfComment());
         });
     }
 
@@ -46,6 +46,27 @@ public class QuestionDao {
 
 
         return jdbcTemplate.query(preparedStatementSetter, rowMapper);
+    }
+
+    public Question findQuestion(String questionId) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate() {
+            @Override
+            public String createQuery() {
+                return "select * from questions where questionId = ?";
+            }
+
+        };
+        PreparedStatementSetter preparedStatementSetter = preparedStatement -> preparedStatement.setLong(1, Long.parseLong(questionId));
+        RowMapper<Question> rowMapper = (resultSet -> {
+            String writer = resultSet.getString("writer");
+            String contents = resultSet.getString("contents");
+            String title = resultSet.getString("title");
+            Time createddate = resultSet.getTime("createddate");
+            int countofanswer = resultSet.getInt("COUNTOFANSWER");
+            return new Question(Long.parseLong(questionId), writer, contents, title, createddate, countofanswer);
+        });
+        return jdbcTemplate.queryObject(preparedStatementSetter, rowMapper);
+
     }
 
 }

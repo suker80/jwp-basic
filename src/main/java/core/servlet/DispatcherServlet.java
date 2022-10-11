@@ -28,7 +28,9 @@ public class DispatcherServlet extends HttpServlet {
         try {
             String viewName = controller.execute(req, resp);
             log.info("viewName = {} ", viewName);
-            forward(viewName, req, resp);
+            if (viewName != null) {
+                forward(viewName, req, resp);
+            }
         } catch (ServletException e) {
             e.printStackTrace();
         } catch (IOException e) {

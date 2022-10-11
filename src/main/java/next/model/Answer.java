@@ -1,6 +1,6 @@
 package next.model;
 
-import java.sql.Time;
+import java.sql.Date;
 
 public class Answer {
     private Long answerId;
@@ -8,26 +8,22 @@ public class Answer {
     private final Long questionId;
     private final String writer;
     private final String contents;
-    private final String title;
 
-    private final Time createdDate;
-    private int countOfAnswer;
+    private final Date createdDate;
 
-    public Answer(Long questionId, String writer, String contents, String title, Time createdDate) {
+    public Answer(Long answerId, Long questionId, String writer, String contents, Date createdDate) {
+        this.answerId = answerId;
         this.questionId = questionId;
         this.writer = writer;
         this.contents = contents;
-        this.title = title;
         this.createdDate = createdDate;
     }
 
-    public Answer(Long questionId, String writer, String contents, String title, Time createdDate, int countOfAnswer) {
+    public Answer(Long questionId, String writer, String contents, Date createdDate) {
         this.questionId = questionId;
         this.writer = writer;
         this.contents = contents;
-        this.title = title;
         this.createdDate = createdDate;
-        this.countOfAnswer = countOfAnswer;
     }
 
     public Long getAnswerId() {
@@ -46,15 +42,8 @@ public class Answer {
         return contents;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public Time getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public int getCountOfAnswer() {
-        return countOfAnswer;
-    }
 }

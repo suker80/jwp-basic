@@ -12,14 +12,14 @@ public class Question {
     private final String title;
 
     private final Time createdDate;
-    private final int countOfAnswer;
+    private final int countOfComment;
 
-    public Question(String writer, String contents, String title, Time createdDate, int countOfAnswer) {
+    public Question(String writer, String contents, String title, Time createdDate, int countOfComment) {
         this.writer = writer;
         this.contents = contents;
         this.title = title;
         this.createdDate = createdDate;
-        this.countOfAnswer = countOfAnswer;
+        this.countOfComment = countOfComment;
     }
 
     public Long getQuestionId() {
@@ -30,13 +30,13 @@ public class Question {
         return writer;
     }
 
-    public Question(Long questionId, String writer, String contents, String title, Time createdDate, int countOfAnswer) {
+    public Question(Long questionId, String writer, String contents, String title, Time createdDate, int countOfComment) {
         this.questionId = questionId;
         this.writer = writer;
         this.contents = contents;
         this.title = title;
         this.createdDate = createdDate;
-        this.countOfAnswer = countOfAnswer;
+        this.countOfComment = countOfComment;
     }
 
     public String getContents() {
@@ -51,8 +51,8 @@ public class Question {
         return createdDate;
     }
 
-    public int getCountOfAnswer() {
-        return countOfAnswer;
+    public int getCountOfComment() {
+        return countOfComment;
     }
 
 }
