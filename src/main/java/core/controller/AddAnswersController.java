@@ -3,6 +3,7 @@ package core.controller;
 import core.view.ModelAndView;
 import next.dao.AnswerDao;
 import next.model.Answer;
+import next.model.UserSessionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,8 +18,10 @@ public class AddAnswersController extends AbstractController {
 
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) {
+        if (!UserSessionUtils.isLogined(request.getSession())) {
+            return jspView("/login");
+        }
         String writer = request.getParameter("writer");
-
         String contents = request.getParameter("contents");
         Long questionId = Long.valueOf(request.getParameter("questionId"));
 

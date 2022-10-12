@@ -17,7 +17,7 @@ public class RequestMapping {
         controllerMap.put("/qna", new CreateQuestionsController());
         controllerMap.put("/", new HomeController());
         controllerMap.put("/index.jsp", new HomeController());
-        controllerMap.put("/qna/form", new ForwardController());
+        controllerMap.put("/qna/form", new QnaFormController());
         controllerMap.put("/api/qna/addAnswer", new AddAnswersController());
         controllerMap.put("/home", new HomeController());
         controllerMap.put("/qna/show", new QnaShowController());

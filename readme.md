@@ -20,5 +20,13 @@
 9. ModelAndView 인스턴스의 View 인스턴스를 통해 model 값, HttpServletRequest , HttpServletResponse를 넘기게 된다.
 10. View 인스턴스 안에서 forward 메서드를 통해 webcontent안에 있는 html을 찾게 된다.
 
+#### 3. 질문 목록은 정상적으로 동작하지만 질문하기 기능은 동작하지 않음. 질문 하기 기능을 구현
+
+#### 4. 로그인하지 않은 사용자도 질문하기가 가능. 로그인한 사용자만 질문이 가능하도록 수정한다.
+
+#### 5. 질문 목록을 정적인 HTML이 아닌 데이터베이스에 있는 답변을 출력하도록 구현
+
+#### 6. 한글이 깨지는 문제를 해결
+
 #### 7. next.web.qna package의 ShowController는 멀티 쓰레드 상황에서 문제가 발생하는 이유에 대해 설명하라.
 * 
